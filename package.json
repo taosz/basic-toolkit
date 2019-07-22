@@ -1,0 +1,61 @@
+{
+  "name": "basic-toolkit",
+  "version": "0.1.1",
+  "description": "basic env for vue",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "npm run prompt && npm run all",
+    "serve": "node --max_old_space_size=8192 ./node_modules/webpack-dev-server/bin/webpack-dev-server --config  ./config/webpack.config.dev.js --hot",
+    "dist": "npm run remove:dist && npm run lint && node --max_old_space_size=8192 ./node_modules/webpack/bin/webpack --config ./config/webpack.config.dist.js",
+    "build": "cross-env UGLIFY_JS=true npm run dist -- -p && npm run copy",
+    "build:dev": "cross-env UGLIFY_JS=false npm run dist && npm run copy",
+    "remove:dist": "rm -rf ./dist",
+    "clear": "rm -rf ./node_modules/.cache",
+    "copy": "echo 'end'",
+    "lint": "esw config ./src/pages --ext .vue,.js",
+    "lint:fix": "npm run lint -- --fix",
+    "lint:watch": "npm run lint -- --fix --watch",
+    "lint:style": "stylelint --fix --syntax scss src",
+    "mock": "cd ./src/mock && npm run start",
+    "prompt": "node ./config/prompt.config.js",
+    "all": "cross-env BB=development npm-run-all --parallel --race --continue-on-error lint:watch serve",
+    "lint-staged": "lint-staged",
+    "pre-commit:install": "cp .hooks/* .git/hooks/",
+    "create": "wya add --config ./config/toolkit.config.js",
+    "test": "jest --config ./tests/config/jest.config.js"
+  },
+  "author": "taosz",
+  "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
+  "bin": {
+    "basic-toolkit": "bin/basic-toolkit"
+  },
+  "devDependencies": {
+  },
+  "dependencies": {
+    "chalk": "^2.3.2",
+    "fs-extra": "^5.0.0",
+    "inquirer": "^5.2.0",
+    "ora": "^2.0.0"
+  },
+  "pre-commit": [
+    "lint-staged"
+  ],
+  "lint-staged": {
+    "{src,bin}/**/*": [
+      "esw --fix",
+      "git add"
+    ],
+    "*.md": [
+      "esw --ext '.md' --fix",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taosz/basic-toolkit.git"
+  }
+}
