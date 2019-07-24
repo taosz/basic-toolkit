@@ -3,28 +3,15 @@ import chalk from 'chalk';
 import shell from 'shelljs';
 import upath from 'upath';
 import { routeForReact, routeForVue } from './add/index';
+
 const log = console.log;
 const question = [
-	{
-		type: 'list',
-		name: 'type',
-		message: 'Select type:',
-		choices: [
-			new Separator(' = For project = '),
-			'routeForVue',
-			'routeForReact',
-			// 'routeForWechat',
-			// 'routeForRN'
-			'none'
-		],
-		default: 'routeForVue'
-	},
 	{
 		type: 'input',
 		name: 'project',
 		message: 'Project Name:',
 		when: (answers) => answers.type === 'routeForVue',
-		validate (val) {
+		validate(val) {
 			if (val === '') {
 				return 'Project Name is required!';
 			} else {
@@ -45,6 +32,7 @@ const question = [
 		],
 		default: 'basic'
 	},
+	// paging
 	{
 		type: 'list',
 		name: 'pagingType',
@@ -76,7 +64,7 @@ const question = [
 		message: 'RoutePath is required:',
 		default: '/home',
 		when: (answers) => answers.type !== 'none',
-		validate (val) {
+		validate(val) {
 			if (val === '') {
 				return 'Name is required!';
 			} else {
@@ -90,31 +78,19 @@ const question = [
 		message: 'Where to in the project:',
 		when: (answers) => answers.type !== 'none',
 		default: upath.normalize(`${process.cwd()}/src/pages/`),
-		// default: upath.normalize(`${process.cwd()}/tmp/`),
-		// default: upath.normalize(`${process.cwd()}/tmp/src/pages/`),
-		validate (val) {
+		validate(val) {
 			if (val === `${process.cwd()}/tmp/`) {
 				// shell.rm('-rf', 'tmp');
 			}
 			return true;
 		}
 	},
-	
+
 ];
 
 const stream = prompt(question).then((res) => {
-	switch (res.type) {
-		case "routeForReact":
-			routeForReact(res);
-			break;
-		case "routeForVue":
-			routeForVue(res);
-			break;
-		default:
-			log('need to do!');
-			break;
-	}
-
+	routeForVue(res);
+	log(res);
 });
 
 export default stream;
